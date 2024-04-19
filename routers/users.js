@@ -5,10 +5,9 @@ const lodash = require("lodash");
 const { User, validateU } = require("../models/users");
 const auth = require("../middleware/auth");
 const router = express.Router();
-const SysAdmin = "6620fcb19ba0ae48757fdf26"
+require('dotenv').config();
 
-router.post("/create", auth, async (req, res) => {
-  if(req.user._id != SysAdmin) return res.status(400).send("You are not authorized to create a user.");
+router.post("/create", async (req, res) => {
   const { error } = validateU(req.body);
   if (error) return res.status(400).send(error.details[0].message);
   let user = await User.findOne({ email: req.body.email });
@@ -32,7 +31,7 @@ router.post("/login", async (req, res) => {
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword) return res.status(400).send("Invalid email or password.");
 
-  const token = jwt.sign({ _id: user._id }, "jwtPrivateKey");
+  const token = jwt.sign({ _id: user._id }, process.env.SECRET_KEY, { expiresIn: "15m" });
   res.setHeader("Access-Control-Allow-Origin", "*"); // Allow requests from all origins
   res.setHeader(
     "Access-Control-Allow-Methods",
