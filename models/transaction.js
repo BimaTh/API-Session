@@ -14,6 +14,12 @@ const AccountTransactions = new mongoose.Schema({
     max: 255,
     imutable: true,
   },
+  RecieverName: {
+    type: String,
+    minlength: 3,
+    maxlength: 50,
+    required: true,
+  },
   TransactionAmount: {
     type: Number,
     required: true,

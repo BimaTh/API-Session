@@ -9,11 +9,12 @@ router.post("/create", auth ,  async (req, res) => {
   let tr = new transaction({
     AccountNumber: req.user._id,
     Reciever: req.body.account,
+    RecieverName: req.body.RecieverName,
     TransactionAmount: req.body.TransactionAmount,
   });
   await tr.save();
 
-  res.send(lodash.pick(tr, "AccountNumber", "Reciever", "TransactionAmount", "TransactionDate"));
+  res.send(lodash.pick(tr, "AccountNumber", "Reciever", "RecieverName", "TransactionAmount", "TransactionDate"));
 });
 
 router.get("/fetch", auth ,  async (req, res) => {
