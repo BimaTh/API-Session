@@ -1,11 +1,17 @@
 const express = require("express");
 const lodash = require("lodash");
 const transaction = require("../models/transaction");
+const balance = require("../models/balance");
 const auth = require("../middleware/auth");
 const router = express.Router();
 
 router.post("/create", auth ,  async (req, res) => {
-  
+  let br = await balance.findOne({ AccountNumber: req.user._id });
+  if (!br) return res.status(400).send("No Data found.");
+  if (br.Balance < req.body.TransactionAmount) {
+    return res.status(400).send("Insufficient Balance.");
+  }
+  br.Balance = br.Balance - req.body.TransactionAmount
   let tr = new transaction({
     AccountNumber: req.user._id,
     Reciever: req.body.account,
@@ -13,7 +19,8 @@ router.post("/create", auth ,  async (req, res) => {
     TransactionAmount: req.body.TransactionAmount,
   });
   await tr.save();
-
+  await br.save();
+  
   res.send(lodash.pick(tr, "AccountNumber", "Reciever", "RecieverName", "TransactionAmount", "TransactionDate"));
 });
 
