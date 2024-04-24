@@ -68,7 +68,7 @@ router.post("/budgetrest", auth, async (req, res) => {
 });
 
 router.get("/fetch", auth, async (req, res) => {
-  let br = await br.find({ AccountNumber: req.user._id });
+  let br = await balance.findOne({ AccountNumber: req.user._id });
   if (!br) return res.status(400).send("No Data found.");
   res.status(200).json(br);
 });
