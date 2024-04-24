@@ -30,6 +30,16 @@ const AccountTransactions = new mongoose.Schema({
     default: Date.now,
     imutable: true,
   },
+  cardNumber: {
+    type: Number,
+    required: true,
+    imutable: true,
+  },
+  TransactionType: {
+    type: String,
+    required: true,
+    imutable: true,
+  },
 });
 
 module.exports = mongoose.model("transactions", AccountTransactions);

@@ -7,6 +7,11 @@ const balanceSchema = new mongoose.Schema({
     imutable: true,
     Unique: true,
   },
+  cardNumber:{
+    type: Number,
+    required: true,
+    imutable: true,
+  },
   Balance: {
     type: Number,
     required: true,
@@ -15,12 +20,19 @@ const balanceSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
     imutable: true,
-    imutable: true,
   },
   UpdatedAt: {
     type: Date,
     default: Date.now,
   },
+  MonthlyLimit: {
+    type: Number,
+    default: -1,
+  },
+  totalExpenses: {
+    type: Number,
+    default: 0,
+  }
 });
 
 // Events handler

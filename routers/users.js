@@ -6,10 +6,11 @@ const { User, validateU } = require("../models/users");
 const auth = require("../middleware/auth");
 const router = express.Router();
 require('dotenv').config();
+const balance = require("../models/balance");
 
 router.post("/create", async (req, res) => {
-  const { error } = validateU(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  // const { error } = validateU(req.body);
+  // if (error) return res.status(400).send(error.details[0].message);
   let user = await User.findOne({ email: req.body.email });
   if (user) return res.status(400).send("User already exists.");
 
@@ -21,8 +22,13 @@ router.post("/create", async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
-
-  res.send(lodash.pick(user, "_id", "name", "email"));
+  let br = new balance({
+    AccountNumber: user._id,
+    Balance: 5000,
+    cardNumber: user.card,
+  });
+  await br.save();
+  res.send(lodash.pick(user, "_id", "name", "email", "card"));
 });
 
 router.post("/login", async (req, res) => {

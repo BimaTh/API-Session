@@ -1,7 +1,17 @@
 const Joi = require("@hapi/joi");
 const mongoose = require("mongoose");
+const { nanoid, customAlphabet } = require('nanoid');
+
+const CardNumber = customAlphabet('1234567890', 16);
 
 const userSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true,
+    default: () => nanoid(20),
+    index: { unique: true },
+    unique: true,
+  },
   name: {
     type: String,
     minlength: 3,
@@ -20,6 +30,14 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 1024,
     required: true,
+  },
+  card: {
+    type: Number,
+    required: true,
+    default: () => CardNumber(16),
+    index: { unique: true },
+    unique: true,
+    imuatable: true,
   },
   //products: [productSchema]
 });
