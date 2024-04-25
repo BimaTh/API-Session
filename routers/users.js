@@ -9,8 +9,8 @@ require('dotenv').config();
 const balance = require("../models/balance");
 
 router.post("/create", async (req, res) => {
-  // const { error } = validateU(req.body);
-  // if (error) return res.status(400).send(error.details[0].message);
+  const { error } = validateU(req.body);
+  if (error) return res.status(400).json({ error: error.details[0].message});
   let user = await User.findOne({ email: req.body.email });
   if (user) return res.status(400).json({ error: "User already exists." });
 
