@@ -8,6 +8,7 @@ const router = express.Router();
 router.post("/create", auth, async (req, res, next) => {
   let sender = await balance.findOne({ AccountNumber: req.user._id });
   let totalExpenses = sender.totalExpenses;
+  let finalExpenses = parseInt(totalExpenses) + parseInt(req.body.TransactionAmount)
   if (!sender) return res.status(400).json({ error: "User not found." });
 
   if (req.body.TransactionAmount < 0) {
@@ -17,12 +18,12 @@ router.post("/create", auth, async (req, res, next) => {
     return res.status(400).json({ error: "Insufficient funds." });
   }
   if (sender.MonthlyLimit !== -1) {
-    if(sender.MonthlyLimit < totalExpenses + req.body.TransactionAmount){
+    if(sender.MonthlyLimit < finalExpenses){
       return res.status(400).json({ error: "Exceeded monthly limit." });
     }
-    if (Math.abs(sender.MonthlyLimit) < Math.abs(req.body.TransactionAmount)) {
-      return res.status(400).json({ error: "Exceeded monthly limit." });
-    }
+    // if (Math.abs(sender.MonthlyLimit) < Math.abs(req.body.TransactionAmount)) {
+    //   return res.status(400).json({ error: "Exceeded monthly limit." });
+    // }
   }
   let tr = new transaction({
     AccountNumber: req.user._id,
