@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const users = require("./routers/users");
 const transaction = require("./routers/transaction");
 const balance = require("./routers/balance");
+const review = require("./routers/reviews");
 const express = require("express");
 const app = express();
 const cors = require("cors"); // Import the cors package
@@ -23,9 +24,10 @@ app.use(cors());
 app.use("/api/users", users);
 app.use("/api/transactions", transaction);
 app.use("/api/balance", balance);
+app.use("/api/reviews", review);
 
 app.post("/api/auth", auth ,  async (req, res) => {
-  res.status(200);
+  res.status(200).json({})
 });
 
 
